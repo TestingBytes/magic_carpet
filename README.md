@@ -1,5 +1,15 @@
 # Magic Carpet
 
+![Magic Carpet](/images/magic_carpet_logo.jpg)
+
+Powered by Genie
+
+![Genie](/images/genie.png)
+
+And the pyATS framework
+
+![pyATS](/images/pyats.png)
+
 Welcome! 
 
 Magic Carpet is a Cisco "show" command transformation tool that uses the Cisco Genie parsers and the Cisco pyATS Python library and automatically generates, at scale, better documentation from the output. 
