@@ -1,0 +1,21 @@
+<html><body>
+<h1>Show Inventory</h1>
+<table style="width:100%">
+  <tr>
+    <th>Name</th>
+    <th>Part</th>
+    <th>Description</th>
+    <th>Serial Number</th>   
+    <th>Virtual ID</th>
+  </tr>{% for part in to_parse_inventory %}{% for pid in to_parse_inventory[part] %}
+, ,,
+  <tr>
+    <td>{{ to_parse_inventory[part][pid].name }}</td>
+    <td>{{ pid }}</td>
+    <td>{{ to_parse_inventory[part][pid].descr }}</td>
+    <td>{{ to_parse_inventory[part][pid].sn }}</td>
+    <td>{{ to_parse_inventory[part][pid].vid | default("N/A") }}</td>
+    <td></td>
+  </tr>{% endfor %}{% endfor %}
+</table>
+</body></html>

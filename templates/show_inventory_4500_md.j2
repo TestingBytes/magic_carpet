@@ -1,0 +1,4 @@
+# Cisco Inventory Facts
+| Name | Description | PID | Serial Number | Virtual ID |
+| ---- | ----------- | --- | ------------- | ---------- |{% for part in to_parse_inventory %}{% for pid in to_parse_inventory[part] %}
+| {{ to_parse_inventory[part][pid].name }} | {{ pid }} | {{ to_parse_inventory[part][pid].descr }} | {{ to_parse_inventory[part][pid].sn }} | {{ to_parse_inventory[part][pid].vid | default("N/A") }} |{% endfor %}{% endfor %}

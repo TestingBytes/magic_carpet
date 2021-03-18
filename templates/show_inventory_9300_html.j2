@@ -1,0 +1,21 @@
+<html><body>
+<h1>Show Inventory</h1>
+<table style="width:100%">
+  <tr>
+    <th>Slot</th>
+    <th>Part</th>
+    <th>Description</th>
+    <th>PID</th>
+    <th>Serial Number</th>   
+    <th>Virtual ID</th>
+  </tr>{% for slot in to_parse_inventory %}{% for part in to_parse_inventory[slot] %}{% for part_number in to_parse_inventory[slot][part] %}
+  <tr>
+    <td>{{ slot }}</td>
+    <td>{{ part_number }}</td>
+    <td>{{ to_parse_inventory[slot][part][part_number].descr }}</td>
+    <td>{{ to_parse_inventory[slot][part][part_number].pid }}</td>
+    <td>{{ to_parse_inventory[slot][part][part_number].sn }}</td>
+    <td>{{ to_parse_inventory[slot][part][part_number].vid }}</td>
+  </tr>{% endfor %}{% endfor %}{% endfor %}
+</table>
+</body></html>

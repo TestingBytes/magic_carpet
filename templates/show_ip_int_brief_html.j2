@@ -1,0 +1,21 @@
+<html><body>
+<h1>Show IP Interface Brief</h1>
+<table style="width:100%">
+  <tr>
+    <th>Interface</th>
+    <th>IP Address</th>
+    <th>Status</th>
+    <th>Protocol</th>
+    <th>Method</th>   
+    <th>Interface is OK</th>   
+  </tr>{% for interface in to_parse_interfaces %}  
+  <tr>
+    <td>{{ interface }}</td>
+    <td>{{ to_parse_interfaces[interface].ip_address }}</td>
+    <td>{{ to_parse_interfaces[interface].status }}</td>
+    <td>{{ to_parse_interfaces[interface].protocol }}</td>
+    <td>{{ to_parse_interfaces[interface].method }}</td>
+    <td>{{ to_parse_interfaces[interface].interface_is_ok }}</td>
+  </tr>{% endfor %}
+</table>
+</body></html>
