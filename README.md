@@ -30,5 +30,7 @@ pyats run job IOS_XE_magic_carpet_job.py --testbed-file testbed/testbed.yaml
 
 ### IOS-XE Tests
 Tested on Cisco Catalyst 4500X-16 03.11.03a.E
+
 Tested on Cisco Catalyst 3850-12X48U Gibraltar 16.12.04
+
 Tested on Cisco Catalyst 9300-48UXM Gibraltar
