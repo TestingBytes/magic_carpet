@@ -22,7 +22,7 @@ An HTML page (comand_output.html)
 
 In seconds. 
 
-## Simply a better way to run show commands on Cisco Devices
+## Simply a better way; a magical way; to collect and transform network state information
 
 Install pyATS
 
