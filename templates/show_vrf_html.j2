@@ -1,0 +1,15 @@
+<html><body>
+<h1>Show VRF</h1>
+<table style="width:100%">
+  <tr>
+    <th>VRF</th>
+    <th>Protocols</th>
+    <th>Interfaces</th>
+  </tr>{% for vrf in to_parse_vrf %}{% for interface in to_parse_vrf[vrf].interfaces %}{% for protocol in to_parse_vrf[vrf].protocols %}{% if interface != "ipv4" %}
+  <tr>
+    <td>{{ vrf }}</td>
+    <td>{{ protocol }}</td>
+    <td>{{ interface }}</td>
+  </tr>{% endif %}{% endfor %}{% endfor %}{% endfor %}
+</table>
+</body></html>
