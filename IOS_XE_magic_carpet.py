@@ -72,6 +72,10 @@ sh_access_lists_csv_template = env.get_template('show_access_lists_csv.j2')
 sh_access_lists_md_template = env.get_template('show_access_lists_md.j2')
 sh_access_lists_html_template = env.get_template('show_access_lists_html.j2')
 
+# show ntp associations
+sh_ntp_associations_csv_template = env.get_template('show_ntp_associations_csv.j2')
+sh_ntp_associations_md_template = env.get_template('show_ntp_associations_md.j2')
+sh_ntp_associations_html_template = env.get_template('show_ntp_associations_html.j2')
 
 # ----------------
 # Enable logger
@@ -84,7 +88,7 @@ log = logging.getLogger(__name__)
 # ----------------
 log.info(banner("Hang on tight - we are about to go on a magic carpet ride!\n.-.\n[.-''-.,\n|  //`~\)\n(<|0|>0)\n;\  _/ \\_ _\,\n__\|'._/_  \ '='-,\n/\ \    || )_///_\>>\n(  '._ T |\ | _/),-'\n'.   '._.-' /'/ |\n| '._   _.'`-.._/\n,\ / '-' |/\n[_/\-----j\n_.--.__[_.--'_\__\n/         `--'    '---._\n/  '---.  -'. .'  _.--   '.\n\_      '--.___ _;.-o     /\n'.__ ___/______.__8----'\nc-'----'\n\n\n###___Loading testbed___###"))
 testbedfile = os.path.join('testbed/testbed.yaml')
-testbed = topology.loader.load(testbedfile)
+testbed = load(testbedfile)
 log.info("\nPASS: Successfully loaded testbed '{}'\n".format(testbed.name))
 
 # --------------------------
@@ -103,10 +107,11 @@ for device in testbed:
     # ---------------------------------------
     log.info(banner("_.---.__\n.'        `-.\n/      .--.   |\n\/  / /    |_/\n`\/|/    _(_)\n___  /|_.--'    `.   .\n\  `--' .---.     \ /|\n)   `       \     //|\n| __    __   |   '/||\n|/  \  /  \      / ||\n||  |  |   \     \  |\n\|  |  |   /        |\n__\\@/  |@ | ___ \--'\n(     /' `--'  __)|\n__>   (  .  .--' & \n/   `--|_/--'     &  |\n|                 #. |\n|                 q# |\n\              ,ad#'\n`.________.ad####'\n`#####''''''\n`&#\n&# #&\n'#ba'\n'\n\nThe Magic Carpet is heading into the Code of Wonders\nGenie Parsing Has Begun"))
     parsed_show_ip_int_brief = device.parse("show ip interface brief") 
-    parsed_show_int_status = device.parse("show interfaces status")
+    parsed_show_int_status = device.parse("show interface status")
     parsed_show_version = device.parse("show version")
     parsed_show_inventory = device.parse("show inventory")
     parsed_show_access_lists = device.parse("show access-lists")
+    parsed_show_ntp_associations = device.parse("show ntp associations")
     
     # ---------------------------------------
     # Template Results
@@ -152,6 +157,11 @@ for device in testbed:
     output_from_parsed_access_lists_md_template = sh_access_lists_md_template.render(to_parse_access_list=parsed_show_access_lists)
     output_from_parsed_access_lists_html_template = sh_access_lists_html_template.render(to_parse_access_list=parsed_show_access_lists) 
 
+    # ntp associations
+    output_from_parsed_ntp_associations_csv_template = sh_ntp_associations_csv_template.render(to_parse_ntp_associations=parsed_show_ntp_associations)
+    output_from_parsed_ntp_associations_md_template = sh_ntp_associations_md_template.render(to_parse_ntp_associations=parsed_show_ntp_associations)
+    output_from_parsed_ntp_associations_html_template = sh_ntp_associations_html_template.render(to_parse_ntp_associations=parsed_show_ntp_associations)
+
     # ---------------------------------------
     # Create Files
     # ---------------------------------------
@@ -175,7 +185,6 @@ for device in testbed:
     # Show Interfaces Status
     with open("FACTS/Show_Interfaces_Status/%s_show_int_status.json" % device.alias, "w") as fid:
       json.dump(parsed_show_int_status, fid, indent=4, sort_keys=True)
-
     with open("FACTS/Show_Interfaces_Status/%s_show_int_status.yaml" % device.alias, "w") as yml:
       yaml.dump(parsed_show_int_status, yml, allow_unicode=True) 
 
@@ -184,7 +193,7 @@ for device in testbed:
 
     with open("FACTS/Show_Interfaces_Status/%s_show_int_status.md" % device.alias, "w") as fh:
         fh.write(output_from_parsed_int_status_md_template)
-
+        
     with open("FACTS/Show_Interfaces_Status/%s_show_int_status.html" % device.alias, "w") as fh:
         fh.write(output_from_parsed_int_status_html_template)          
 
@@ -259,6 +268,22 @@ for device in testbed:
 
     with open("FACTS/Show_Access_Lists/%s_show_access_lists.html" % device.alias, "w") as fh:
       fh.write(output_from_parsed_access_lists_html_template)  
+
+    # Show NTP Associations
+    with open("FACTS/Show_NTP_Associations/%s_show_ntp_associations.json" % device.alias, "w") as fid:
+      json.dump(parsed_show_ntp_associations, fid, indent=4, sort_keys=True)
+
+    with open("FACTS/Show_NTP_Associations/%s_show_ntp_associations.yaml" % device.alias, "w") as yml:
+      yaml.dump(parsed_show_ntp_associations, yml, allow_unicode=True) 
+
+    with open("FACTS/Show_NTP_Associations/%s_show_ntp_associations.csv" % device.alias, "w") as fh:
+      fh.write(output_from_parsed_ntp_associations_csv_template)
+
+    with open("FACTS/Show_NTP_Associations/%s_show_ntp_associations.md" % device.alias, "w") as fh:
+      fh.write(output_from_parsed_ntp_associations_md_template)
+
+    with open("FACTS/Show_NTP_Associations/%s_show_ntp_associations.html" % device.alias, "w") as fh:
+      fh.write(output_from_parsed_ntp_associations_html_template)  
 
 # Goodbye Banner
 log.info(banner("You've made it out of the Code of Wonders on your Magic Carpet!\nWhat treasures did you get?\n\n_oOoOoOo_\n(oOoOoOoOo)\n)`#####`(\n/         \ \n|  NETWORK  |\n|  D A T A  |\n\           /\n`=========`\n\nWritten by John Capobianco March 2021"))  
