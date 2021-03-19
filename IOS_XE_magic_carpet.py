@@ -72,6 +72,10 @@ sh_access_lists_csv_template = env.get_template('show_access_lists_csv.j2')
 sh_access_lists_md_template = env.get_template('show_access_lists_md.j2')
 sh_access_lists_html_template = env.get_template('show_access_lists_html.j2')
 
+# vrf
+sh_vrf_csv_template = env.get_template('show_vrf_csv.j2')
+sh_vrf_md_template = env.get_template('show_vrf_md.j2')
+sh_vrf_html_template = env.get_template('show_vrf_html.j2')
 
 # ----------------
 # Enable logger
@@ -107,6 +111,7 @@ for device in testbed:
     parsed_show_version = device.parse("show version")
     parsed_show_inventory = device.parse("show inventory")
     parsed_show_access_lists = device.parse("show access-lists")
+    parsed_show_vrf = device.parse("show vrf")
     
     # ---------------------------------------
     # Template Results
@@ -151,6 +156,11 @@ for device in testbed:
     output_from_parsed_access_lists_csv_template = sh_access_lists_csv_template.render(to_parse_access_list=parsed_show_access_lists)
     output_from_parsed_access_lists_md_template = sh_access_lists_md_template.render(to_parse_access_list=parsed_show_access_lists)
     output_from_parsed_access_lists_html_template = sh_access_lists_html_template.render(to_parse_access_list=parsed_show_access_lists) 
+
+    # vrf
+    output_from_parsed_vrf_csv_template = sh_vrf_csv_template.render(to_parse_vrf=parsed_show_vrf['vrf'])
+    output_from_parsed_vrf_md_template = sh_vrf_md_template.render(to_parse_vrf=parsed_show_vrf['vrf'])
+    output_from_parsed_vrf_html_template = sh_vrf_html_template.render(to_parse_vrf=parsed_show_vrf['vrf'])
 
     # ---------------------------------------
     # Create Files
@@ -259,6 +269,22 @@ for device in testbed:
 
     with open("FACTS/Show_Access_Lists/%s_show_access_lists.html" % device.alias, "w") as fh:
       fh.write(output_from_parsed_access_lists_html_template)  
+
+    # Show VRF
+    with open("FACTS/Show_VRF/%s_show_vrf.json" % device.alias, "w") as fid:
+      json.dump(parsed_show_vrf, fid, indent=4, sort_keys=True)
+
+    with open("FACTS/Show_VRF/%s_show_vrf.yaml" % device.alias, "w") as yml:
+      yaml.dump(parsed_show_vrf, yml, allow_unicode=True) 
+
+    with open("FACTS/Show_VRF/%s_show_vrf.csv" % device.alias, "w") as fh:
+      fh.write(output_from_parsed_vrf_csv_template)
+
+    with open("FACTS/Show_VRF/%s_show_vrf.md" % device.alias, "w") as fh:
+      fh.write(output_from_parsed_vrf_md_template)
+
+    with open("FACTS/Show_VRF/%s_show_vrf.html" % device.alias, "w") as fh:
+      fh.write(output_from_parsed_vrf_html_template)
 
 # Goodbye Banner
 log.info(banner("You've made it out of the Code of Wonders on your Magic Carpet!\nWhat treasures did you get?\n\n_oOoOoOo_\n(oOoOoOoOo)\n)`#####`(\n/         \ \n|  NETWORK  |\n|  D A T A  |\n\           /\n`=========`\n\nWritten by John Capobianco March 2021"))  

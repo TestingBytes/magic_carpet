@@ -1,0 +1,4 @@
+# Show VRF
+| VRF | Protocol | Interfaces |
+| --- | -------- | ---------- |{% for vrf in to_parse_vrf %}{% for interface in to_parse_vrf[vrf].interfaces %}{% for protocol in to_parse_vrf[vrf].protocols %} {% if interface != "ipv4" %}
+| {{ vrf }} | {{ protocol }} | {{ interface }} |{% endif %}{% endfor %}{% endfor %}{% endfor %}
