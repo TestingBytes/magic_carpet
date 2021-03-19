@@ -71,7 +71,10 @@ sh_inventory_9300_html_template = env.get_template('show_inventory_9300_html.j2'
 sh_access_lists_csv_template = env.get_template('show_access_lists_csv.j2')
 sh_access_lists_md_template = env.get_template('show_access_lists_md.j2')
 sh_access_lists_html_template = env.get_template('show_access_lists_html.j2')
-
+# show ntp associations
+sh_ntp_associations_csv_template = env.get_template('show_ntp_associations_csv.j2')
+sh_ntp_associations_md_template = env.get_template('show_ntp_associations_md.j2')
+sh_ntp_associations_html_template = env.get_template('show_ntp_associations_html.j2')
 # vrf
 sh_vrf_csv_template = env.get_template('show_vrf_csv.j2')
 sh_vrf_md_template = env.get_template('show_vrf_md.j2')
@@ -88,7 +91,7 @@ log = logging.getLogger(__name__)
 # ----------------
 log.info(banner("Hang on tight - we are about to go on a magic carpet ride!\n.-.\n[.-''-.,\n|  //`~\)\n(<|0|>0)\n;\  _/ \\_ _\,\n__\|'._/_  \ '='-,\n/\ \    || )_///_\>>\n(  '._ T |\ | _/),-'\n'.   '._.-' /'/ |\n| '._   _.'`-.._/\n,\ / '-' |/\n[_/\-----j\n_.--.__[_.--'_\__\n/         `--'    '---._\n/  '---.  -'. .'  _.--   '.\n\_      '--.___ _;.-o     /\n'.__ ___/______.__8----'\nc-'----'\n\n\n###___Loading testbed___###"))
 testbedfile = os.path.join('testbed/testbed.yaml')
-testbed = topology.loader.load(testbedfile)
+testbed = load(testbedfile)
 log.info("\nPASS: Successfully loaded testbed '{}'\n".format(testbed.name))
 
 # --------------------------
@@ -111,6 +114,7 @@ for device in testbed:
     parsed_show_version = device.parse("show version")
     parsed_show_inventory = device.parse("show inventory")
     parsed_show_access_lists = device.parse("show access-lists")
+    parsed_show_ntp_associations = device.parse("show ntp associations")
     parsed_show_vrf = device.parse("show vrf")
     
     # ---------------------------------------
@@ -157,6 +161,11 @@ for device in testbed:
     output_from_parsed_access_lists_md_template = sh_access_lists_md_template.render(to_parse_access_list=parsed_show_access_lists)
     output_from_parsed_access_lists_html_template = sh_access_lists_html_template.render(to_parse_access_list=parsed_show_access_lists) 
 
+    # ntp associations
+    output_from_parsed_ntp_associations_csv_template = sh_ntp_associations_csv_template.render(to_parse_ntp_associations=parsed_show_ntp_associations)
+    output_from_parsed_ntp_associations_md_template = sh_ntp_associations_md_template.render(to_parse_ntp_associations=parsed_show_ntp_associations)
+    output_from_parsed_ntp_associations_html_template = sh_ntp_associations_html_template.render(to_parse_ntp_associations=parsed_show_ntp_associations)
+
     # vrf
     output_from_parsed_vrf_csv_template = sh_vrf_csv_template.render(to_parse_vrf=parsed_show_vrf['vrf'])
     output_from_parsed_vrf_md_template = sh_vrf_md_template.render(to_parse_vrf=parsed_show_vrf['vrf'])
@@ -185,7 +194,6 @@ for device in testbed:
     # Show Interfaces Status
     with open("FACTS/Show_Interfaces_Status/%s_show_int_status.json" % device.alias, "w") as fid:
       json.dump(parsed_show_int_status, fid, indent=4, sort_keys=True)
-
     with open("FACTS/Show_Interfaces_Status/%s_show_int_status.yaml" % device.alias, "w") as yml:
       yaml.dump(parsed_show_int_status, yml, allow_unicode=True) 
 
@@ -269,6 +277,22 @@ for device in testbed:
 
     with open("FACTS/Show_Access_Lists/%s_show_access_lists.html" % device.alias, "w") as fh:
       fh.write(output_from_parsed_access_lists_html_template)  
+
+    # Show NTP Associations
+    with open("FACTS/Show_NTP_Associations/%s_show_ntp_associations.json" % device.alias, "w") as fid:
+      json.dump(parsed_show_ntp_associations, fid, indent=4, sort_keys=True)
+
+    with open("FACTS/Show_NTP_Associations/%s_show_ntp_associations.yaml" % device.alias, "w") as yml:
+      yaml.dump(parsed_show_ntp_associations, yml, allow_unicode=True) 
+
+    with open("FACTS/Show_NTP_Associations/%s_show_ntp_associations.csv" % device.alias, "w") as fh:
+      fh.write(output_from_parsed_ntp_associations_csv_template)
+
+    with open("FACTS/Show_NTP_Associations/%s_show_ntp_associations.md" % device.alias, "w") as fh:
+      fh.write(output_from_parsed_ntp_associations_md_template)
+
+    with open("FACTS/Show_NTP_Associations/%s_show_ntp_associations.html" % device.alias, "w") as fh:
+      fh.write(output_from_parsed_ntp_associations_html_template)  
 
     # Show VRF
     with open("FACTS/Show_VRF/%s_show_vrf.json" % device.alias, "w") as fid:
