@@ -110,7 +110,7 @@ for device in testbed:
     # ---------------------------------------
     log.info(banner("_.---.__\n.'        `-.\n/      .--.   |\n\/  / /    |_/\n`\/|/    _(_)\n___  /|_.--'    `.   .\n\  `--' .---.     \ /|\n)   `       \     //|\n| __    __   |   '/||\n|/  \  /  \      / ||\n||  |  |   \     \  |\n\|  |  |   /        |\n__\\@/  |@ | ___ \--'\n(     /' `--'  __)|\n__>   (  .  .--' & \n/   `--|_/--'     &  |\n|                 #. |\n|                 q# |\n\              ,ad#'\n`.________.ad####'\n`#####''''''\n`&#\n&# #&\n'#ba'\n'\n\nThe Magic Carpet is heading into the Code of Wonders\nGenie Parsing Has Begun"))
     parsed_show_ip_int_brief = device.parse("show ip interface brief") 
-    parsed_show_int_status = device.parse("show interface status")
+    parsed_show_int_status = device.parse("show interfaces status")
     parsed_show_version = device.parse("show version")
     parsed_show_inventory = device.parse("show inventory")
     parsed_show_access_lists = device.parse("show access-lists")
