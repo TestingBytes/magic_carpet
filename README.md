@@ -86,4 +86,4 @@ Tested on Cisco Catalyst 9300-48UXM Gibraltar
 
 #### The World's First Talking Network is Powered by Magic Carpet 
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/yyWnvzc0vlA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![Watch the video]](https://www.youtube.com/embed/yyWnvzc0vlA)
