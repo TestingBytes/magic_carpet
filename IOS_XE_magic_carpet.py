@@ -9,8 +9,6 @@
 # ----------------
 import os
 import sys
-from rich.align import AlignMethod
-import typing_extensions
 import yaml
 import time
 import json
@@ -25,7 +23,7 @@ from pyats import aetest
 # Jinja2
 # ----------------
 from jinja2 import Environment, FileSystemLoader
-template_dir = 'templates'
+template_dir = 'templates/cisco/ios_xe'
 env = Environment(loader=FileSystemLoader(template_dir))
 
 # ----------------
@@ -93,7 +91,10 @@ sh_ip_arp_csv_template = env.get_template('show_ip_arp_csv.j2')
 sh_ip_arp_md_template = env.get_template('show_ip_arp_md.j2')
 sh_ip_arp_html_template = env.get_template('show_ip_arp_html.j2')
 
-log = logging.getLogger(__name__)
+# IP ARP VRF <VRF>
+sh_ip_arp_vrf_csv_template = env.get_template('show_ip_arp_csv.j2')
+sh_ip_arp_vrf_md_template = env.get_template('show_ip_arp_md.j2')
+sh_ip_arp_vrf_html_template = env.get_template('show_ip_arp_html.j2')
 
 class common_setup(aetest.CommonSetup):
     """Common Setup section"""
@@ -169,25 +170,25 @@ class Collect_Information(aetest.Testcase):
 
             with steps.start('Store data',continue_=True) as step:
 
-                # ip int brief
+                # Show ip int brief
                 if hasattr(self, 'parsed_show_ip_int_brief'):
                     output_from_parsed_ip_int_brief_csv_template = sh_ip_int_brief_csv_template.render(to_parse_interfaces=self.parsed_show_ip_int_brief['interface'])
                     output_from_parsed_ip_int_brief_md_template = sh_ip_int_brief_md_template.render(to_parse_interfaces=self.parsed_show_ip_int_brief['interface'])
                     output_from_parsed_ip_int_brief_html_template = sh_ip_int_brief_html_template.render(to_parse_interfaces=self.parsed_show_ip_int_brief['interface'])
 
-                # int status
+                # Show int status
                 if hasattr(self, 'parsed_show_int_status'):
                     output_from_parsed_int_status_csv_template = sh_int_status_csv_template.render(to_parse_interfaces=self.parsed_show_int_status['interfaces'])
                     output_from_parsed_int_status_md_template = sh_int_status_md_template.render(to_parse_interfaces=self.parsed_show_int_status['interfaces'])
                     output_from_parsed_int_status_html_template = sh_int_status_html_template.render(to_parse_interfaces=self.parsed_show_int_status['interfaces'])
 
-                # version
+                # Show version
                 if hasattr(self, 'parsed_show_version'):
                     output_from_parsed_version_csv_template = sh_ver_csv_template.render(to_parse_version=self.parsed_show_version['version'])
                     output_from_parsed_version_md_template = sh_ver_md_template.render(to_parse_version=self.parsed_show_version['version'])
                     output_from_parsed_version_html_template = sh_ver_html_template.render(to_parse_version=self.parsed_show_version['version'])
 
-                # inventory
+                # Show inventory
                 if hasattr(self, 'parsed_show_inventory'):
 
                     # 4500
@@ -208,25 +209,25 @@ class Collect_Information(aetest.Testcase):
                       output_from_parsed_inventory_9300_md_template = sh_inventory_9300_md_template.render(to_parse_inventory=self.parsed_show_inventory['slot'])
                       output_from_parsed_inventory_9300_html_template = sh_inventory_9300_html_template.render(to_parse_inventory=self.parsed_show_inventory['slot'])
 
-                # access-lists
+                # Show access-lists
                 if hasattr(self, 'parsed_show_access_lists'):
                     output_from_parsed_access_lists_csv_template = sh_access_lists_csv_template.render(to_parse_access_list=self.parsed_show_access_lists)
                     output_from_parsed_access_lists_md_template = sh_access_lists_md_template.render(to_parse_access_list=self.parsed_show_access_lists)
                     output_from_parsed_access_lists_html_template = sh_access_lists_html_template.render(to_parse_access_list=self.parsed_show_access_lists)
 
-                # ntp associations
+                # Show ntp associations
                 if hasattr(self, 'parsed_show_ntp_associations'):
                     output_from_parsed_ntp_associations_csv_template = sh_ntp_associations_csv_template.render(to_parse_ntp_associations=self.parsed_show_ntp_associations)
                     output_from_parsed_ntp_associations_md_template = sh_ntp_associations_md_template.render(to_parse_ntp_associations=self.parsed_show_ntp_associations)
                     output_from_parsed_ntp_associations_html_template = sh_ntp_associations_html_template.render(to_parse_ntp_associations=self.parsed_show_ntp_associations)
 
-                # vrf
+                # Show vrf
                 if hasattr(self, 'parsed_show_vrf'):
                     output_from_parsed_vrf_csv_template = sh_vrf_csv_template.render(to_parse_vrf=self.parsed_show_vrf['vrf'])
                     output_from_parsed_vrf_md_template = sh_vrf_md_template.render(to_parse_vrf=self.parsed_show_vrf['vrf'])
                     output_from_parsed_vrf_html_template = sh_vrf_html_template.render(to_parse_vrf=self.parsed_show_vrf['vrf'])
 
-                # ip arp
+                # Show ip arp
                 if hasattr(self, 'parsed_show_ip_arp'):
                     output_from_parsed_ip_arp_csv_template = sh_ip_arp_csv_template.render(to_parse_ip_arp=self.parsed_show_ip_arp['interfaces'])
                     output_from_parsed_ip_arp_md_template = sh_ip_arp_md_template.render(to_parse_ip_arp=self.parsed_show_ip_arp['interfaces'])
@@ -238,174 +239,199 @@ class Collect_Information(aetest.Testcase):
 
                 # Show IP Interface Brief
                 if hasattr(self, 'parsed_show_ip_int_brief'):
-                    with open("FACTS/Show_IP_Interface_Brief/%s_show_ip_int_brief.json" % device.alias, "w") as fid:
+                    with open("Cave_of_Wonders/Show_IP_Interface_Brief/%s_show_ip_int_brief.json" % device.alias, "w") as fid:
                       json.dump(self.parsed_show_ip_int_brief, fid, indent=4, sort_keys=True)
 
-                    with open("FACTS/Show_IP_Interface_Brief/%s_show_ip_int_brief.yaml" % device.alias, "w") as yml:
+                    with open("Cave_of_Wonders/Show_IP_Interface_Brief/%s_show_ip_int_brief.yaml" % device.alias, "w") as yml:
                       yaml.dump(self.parsed_show_ip_int_brief, yml, allow_unicode=True)
 
-                    with open("FACTS/Show_IP_Interface_Brief/%s_show_ip_int_brief.csv" % device.alias, "w") as fh:
+                    with open("Cave_of_Wonders/Show_IP_Interface_Brief/%s_show_ip_int_brief.csv" % device.alias, "w") as fh:
                         fh.write(output_from_parsed_ip_int_brief_csv_template)
 
-                    with open("FACTS/Show_IP_Interface_Brief/%s_show_ip_int_brief.md" % device.alias, "w") as fh:
+                    with open("Cave_of_Wonders/Show_IP_Interface_Brief/%s_show_ip_int_brief.md" % device.alias, "w") as fh:
                         fh.write(output_from_parsed_ip_int_brief_md_template)
 
-                    with open("FACTS/Show_IP_Interface_Brief/%s_show_ip_int_brief.html" % device.alias, "w") as fh:
+                    with open("Cave_of_Wonders/Show_IP_Interface_Brief/%s_show_ip_int_brief.html" % device.alias, "w") as fh:
                         fh.write(output_from_parsed_ip_int_brief_html_template)
 
                 # Show Interfaces Status
                 if hasattr(self, 'parsed_show_int_status'):
-                    with open("FACTS/Show_Interfaces_Status/%s_show_int_status.json" % device.alias, "w") as fid:
+                    with open("Cave_of_Wonders/Show_Interfaces_Status/%s_show_int_status.json" % device.alias, "w") as fid:
                       json.dump(self.parsed_show_int_status, fid, indent=4, sort_keys=True)
 
-                    with open("FACTS/Show_Interfaces_Status/%s_show_int_status.yaml" % device.alias, "w") as yml:
+                    with open("Cave_of_Wonders/Show_Interfaces_Status/%s_show_int_status.yaml" % device.alias, "w") as yml:
                       yaml.dump(self.parsed_show_int_status, yml, allow_unicode=True)
 
-                    with open("FACTS/Show_Interfaces_Status/%s_show_int_status.csv" % device.alias, "w") as fh:
+                    with open("Cave_of_Wonders/Show_Interfaces_Status/%s_show_int_status.csv" % device.alias, "w") as fh:
                         fh.write(output_from_parsed_int_status_csv_template)
 
-                    with open("FACTS/Show_Interfaces_Status/%s_show_int_status.md" % device.alias, "w") as fh:
+                    with open("Cave_of_Wonders/Show_Interfaces_Status/%s_show_int_status.md" % device.alias, "w") as fh:
                         fh.write(output_from_parsed_int_status_md_template)
 
-                    with open("FACTS/Show_Interfaces_Status/%s_show_int_status.html" % device.alias, "w") as fh:
+                    with open("Cave_of_Wonders/Show_Interfaces_Status/%s_show_int_status.html" % device.alias, "w") as fh:
                         fh.write(output_from_parsed_int_status_html_template)
 
                 # Show Version
                 if hasattr(self, 'parsed_show_version'):
-                    with open("FACTS/Show_Version/%s_show_version.json" % device.alias, "w") as fid:
+                    with open("Cave_of_Wonders/Show_Version/%s_show_version.json" % device.alias, "w") as fid:
                       json.dump(self.parsed_show_version, fid, indent=4, sort_keys=True)
 
-                    with open("FACTS/Show_Version/%s_show_version.yaml" % device.alias, "w") as yml:
+                    with open("Cave_of_Wonders/Show_Version/%s_show_version.yaml" % device.alias, "w") as yml:
                       yaml.dump(self.parsed_show_version, yml, allow_unicode=True)
 
-                    with open("FACTS/Show_Version/%s_show_version.csv" % device.alias, "w") as fh:
+                    with open("Cave_of_Wonders/Show_Version/%s_show_version.csv" % device.alias, "w") as fh:
                         fh.write(output_from_parsed_version_csv_template)
 
-                    with open("FACTS/Show_Version/%s_show_version.md" % device.alias, "w") as fh:
+                    with open("Cave_of_Wonders/Show_Version/%s_show_version.md" % device.alias, "w") as fh:
                         fh.write(output_from_parsed_version_md_template)
 
-                    with open("FACTS/Show_Version/%s_show_version.html" % device.alias, "w") as fh:
+                    with open("Cave_of_Wonders/Show_Version/%s_show_version.html" % device.alias, "w") as fh:
                         fh.write(output_from_parsed_version_html_template)
 
                 # Show Inventory
                 if hasattr(self, 'parsed_show_inventory'):
-                    with open("FACTS/Show_Inventory/%s_show_inventory.json" % device.alias, "w") as fid:
+                    with open("Cave_of_Wonders/Show_Inventory/%s_show_inventory.json" % device.alias, "w") as fid:
                       json.dump(self.parsed_show_inventory, fid, indent=4, sort_keys=True)
 
-                    with open("FACTS/Show_Inventory/%s_show_inventory.yaml" % device.alias, "w") as yml:
+                    with open("Cave_of_Wonders/Show_Inventory/%s_show_inventory.yaml" % device.alias, "w") as yml:
                       yaml.dump(self.parsed_show_inventory, yml, allow_unicode=True)
 
                     # 4500
                     if device.platform == "cat4500":
-                      with open("FACTS/Show_Inventory/%s_show_inventory.csv" % device.alias, "w") as fh:
+                      with open("Cave_of_Wonders/Show_Inventory/%s_show_inventory.csv" % device.alias, "w") as fh:
                         fh.write(output_from_parsed_inventory_4500_csv_template)
 
-                      with open("FACTS/Show_Inventory/%s_show_inventory.md" % device.alias, "w") as fh:
+                      with open("Cave_of_Wonders/Show_Inventory/%s_show_inventory.md" % device.alias, "w") as fh:
                         fh.write(output_from_parsed_inventory_4500_md_template)
 
-                      with open("FACTS/Show_Inventory/%s_show_inventory.html" % device.alias, "w") as fh:
+                      with open("Cave_of_Wonders/Show_Inventory/%s_show_inventory.html" % device.alias, "w") as fh:
                         fh.write(output_from_parsed_inventory_4500_html_template)
 
                     # 3850
                     elif device.platform == "cat3850":
-                      with open("FACTS/Show_Inventory/%s_show_inventory.csv" % device.alias, "w") as fh:
+                      with open("Cave_of_Wonders/Show_Inventory/%s_show_inventory.csv" % device.alias, "w") as fh:
                         fh.write(output_from_parsed_inventory_3850_csv_template)
 
-                      with open("FACTS/Show_Inventory/%s_show_inventory.md" % device.alias, "w") as fh:
+                      with open("Cave_of_Wonders/Show_Inventory/%s_show_inventory.md" % device.alias, "w") as fh:
                         fh.write(output_from_parsed_inventory_3850_md_template)
 
-                      with open("FACTS/Show_Inventory/%s_show_inventory.html" % device.alias, "w") as fh:
+                      with open("Cave_of_Wonders/Show_Inventory/%s_show_inventory.html" % device.alias, "w") as fh:
                         fh.write(output_from_parsed_inventory_3850_html_template)
 
                     # 9300
                     elif device.platform == "cat9300":
-                      with open("FACTS/Show_Inventory/%s_show_inventory.csv" % device.alias, "w") as fh:
+                      with open("Cave_of_Wonders/Show_Inventory/%s_show_inventory.csv" % device.alias, "w") as fh:
                         fh.write(output_from_parsed_inventory_9300_csv_template)
 
-                      with open("FACTS/Show_Inventory/%s_show_inventory.md" % device.alias, "w") as fh:
+                      with open("Cave_of_Wonders/Show_Inventory/%s_show_inventory.md" % device.alias, "w") as fh:
                         fh.write(output_from_parsed_inventory_9300_md_template)
 
-                      with open("FACTS/Show_Inventory/%s_show_inventory.html" % device.alias, "w") as fh:
+                      with open("Cave_of_Wonders/Show_Inventory/%s_show_inventory.html" % device.alias, "w") as fh:
                         fh.write(output_from_parsed_inventory_9300_html_template)
 
                 # Show Access-Lists
                 if hasattr(self, 'parsed_show_access_lists'):
-                    with open("FACTS/Show_Access_Lists/%s_show_access_lists.json" % device.alias, "w") as fid:
+                    with open("Cave_of_Wonders/Show_Access_Lists/%s_show_access_lists.json" % device.alias, "w") as fid:
                       json.dump(self.parsed_show_access_lists, fid, indent=4, sort_keys=True)
 
-                    with open("FACTS/Show_Access_Lists/%s_show_access_lists.yaml" % device.alias, "w") as yml:
+                    with open("Cave_of_Wonders/Show_Access_Lists/%s_show_access_lists.yaml" % device.alias, "w") as yml:
                       yaml.dump(self.parsed_show_access_lists, yml, allow_unicode=True)
 
-                    with open("FACTS/Show_Access_Lists/%s_show_access_lists.csv" % device.alias, "w") as fh:
+                    with open("Cave_of_Wonders/Show_Access_Lists/%s_show_access_lists.csv" % device.alias, "w") as fh:
                       fh.write(output_from_parsed_access_lists_csv_template)
 
-                    with open("FACTS/Show_Access_Lists/%s_show_access_lists.md" % device.alias, "w") as fh:
+                    with open("Cave_of_Wonders/Show_Access_Lists/%s_show_access_lists.md" % device.alias, "w") as fh:
                       fh.write(output_from_parsed_access_lists_md_template)
 
-                    with open("FACTS/Show_Access_Lists/%s_show_access_lists.html" % device.alias, "w") as fh:
+                    with open("Cave_of_Wonders/Show_Access_Lists/%s_show_access_lists.html" % device.alias, "w") as fh:
                       fh.write(output_from_parsed_access_lists_html_template)
 
                 # Show NTP Associations
                 if hasattr(self, 'parsed_show_ntp_associations'):
-                    with open("FACTS/Show_NTP_Associations/%s_show_ntp_associations.json" % device.alias, "w") as fid:
+                    with open("Cave_of_Wonders/Show_NTP_Associations/%s_show_ntp_associations.json" % device.alias, "w") as fid:
                       json.dump(self.parsed_show_ntp_associations, fid, indent=4, sort_keys=True)
 
-                    with open("FACTS/Show_NTP_Associations/%s_show_ntp_associations.yaml" % device.alias, "w") as yml:
+                    with open("Cave_of_Wonders/Show_NTP_Associations/%s_show_ntp_associations.yaml" % device.alias, "w") as yml:
                       yaml.dump(self.parsed_show_ntp_associations, yml, allow_unicode=True)
 
-                    with open("FACTS/Show_NTP_Associations/%s_show_ntp_associations.csv" % device.alias, "w") as fh:
+                    with open("Cave_of_Wonders/Show_NTP_Associations/%s_show_ntp_associations.csv" % device.alias, "w") as fh:
                       fh.write(output_from_parsed_ntp_associations_csv_template)
 
-                    with open("FACTS/Show_NTP_Associations/%s_show_ntp_associations.md" % device.alias, "w") as fh:
+                    with open("Cave_of_Wonders/Show_NTP_Associations/%s_show_ntp_associations.md" % device.alias, "w") as fh:
                       fh.write(output_from_parsed_ntp_associations_md_template)
 
-                    with open("FACTS/Show_NTP_Associations/%s_show_ntp_associations.html" % device.alias, "w") as fh:
+                    with open("Cave_of_Wonders/Show_NTP_Associations/%s_show_ntp_associations.html" % device.alias, "w") as fh:
                       fh.write(output_from_parsed_ntp_associations_html_template)
+
+                # Show IP ARP
+                if hasattr(self, 'parsed_show_ip_arp'):
+                    with open("Cave_of_Wonders/Show_IP_ARP/%s_show_ip_arp.json" % device.alias, "w") as fid:
+                      json.dump(self.parsed_show_ip_arp, fid, indent=4, sort_keys=True)
+
+                    with open("Cave_of_Wonders/Show_IP_ARP/%s_show_ip_arp.yaml" % device.alias, "w") as yml:
+                      yaml.dump(self.parsed_show_ip_arp, yml, allow_unicode=True)
+
+                    with open("Cave_of_Wonders/Show_IP_ARP/%s_show_ip_arp.csv" % device.alias, "w") as fh:
+                      fh.write(output_from_parsed_ip_arp_csv_template)
+
+                    with open("Cave_of_Wonders/Show_IP_ARP/%s_show_ip_arp.md" % device.alias, "w") as fh:
+                      fh.write(output_from_parsed_ip_arp_md_template)
+
+                    with open("Cave_of_Wonders/Show_IP_ARP/%s_show_ip_arp.html" % device.alias, "w") as fh:
+                      fh.write(output_from_parsed_ip_arp_html_template)
 
                 # Show VRF
                 if hasattr(self, 'parsed_show_vrf'):
-                    with open("FACTS/Show_VRF/%s_show_vrf.json" % device.alias, "w") as fid:
+                    with open("Cave_of_Wonders/Show_VRF/%s_show_vrf.json" % device.alias, "w") as fid:
                       json.dump(self.parsed_show_vrf, fid, indent=4, sort_keys=True)
 
-                    with open("FACTS/Show_VRF/%s_show_vrf.yaml" % device.alias, "w") as yml:
+                    with open("Cave_of_Wonders/Show_VRF/%s_show_vrf.yaml" % device.alias, "w") as yml:
                       yaml.dump(self.parsed_show_vrf, yml, allow_unicode=True)
 
-                    with open("FACTS/Show_VRF/%s_show_vrf.csv" % device.alias, "w") as fh:
+                    with open("Cave_of_Wonders/Show_VRF/%s_show_vrf.csv" % device.alias, "w") as fh:
                       fh.write(output_from_parsed_vrf_csv_template)
 
-                    with open("FACTS/Show_VRF/%s_show_vrf.md" % device.alias, "w") as fh:
+                    with open("Cave_of_Wonders/Show_VRF/%s_show_vrf.md" % device.alias, "w") as fh:
                       fh.write(output_from_parsed_vrf_md_template)
 
-                    with open("FACTS/Show_VRF/%s_show_vrf.html" % device.alias, "w") as fh:
+                    with open("Cave_of_Wonders/Show_VRF/%s_show_vrf.html" % device.alias, "w") as fh:
                       fh.write(output_from_parsed_vrf_html_template)
 
-                # IP ARP
-                if hasattr(self, 'parsed_show_ip_arp'):
-                    with open("FACTS/Show_IP_ARP/%s_show_ip_arp.json" % device.alias, "w") as fid:
-                      json.dump(self.parsed_show_ip_arp, fid, indent=4, sort_keys=True)
+                    # Show IP ARP VRF <VRF> 
+                    for vrf in self.parsed_show_vrf['vrf']:
+                        with steps.start('Parsing ip arp vrf',continue_=True) as step:
+                            try:
+                                self.parsed_show_ip_arp_vrf = device.parse("show ip arp vrf %s" % vrf)
+                            except Exception as e:
+                                step.failed('Could not parse it correctly\n{e}'.format(e=e))
 
-                    with open("FACTS/Show_IP_ARP/%s_show_ip_arp.yaml" % device.alias, "w") as yml:
-                      yaml.dump(self.parsed_show_ip_arp, yml, allow_unicode=True)
+                        with steps.start('Store data',continue_=True) as step:
 
-                    with open("FACTS/Show_IP_ARP/%s_show_ip_arp.csv" % device.alias, "w") as fh:
-                      fh.write(output_from_parsed_ip_arp_csv_template)
+                            # Show ip arp
+                            output_from_parsed_ip_arp_vrf_csv_template = sh_ip_arp_vrf_csv_template.render(to_parse_ip_arp=self.parsed_show_ip_arp_vrf['interfaces'])
+                            output_from_parsed_ip_arp_vrf_md_template = sh_ip_arp_vrf_md_template.render(to_parse_ip_arp=self.parsed_show_ip_arp_vrf['interfaces'])
+                            output_from_parsed_ip_arp_vrf_html_template = sh_ip_arp_vrf_html_template.render(to_parse_ip_arp=self.parsed_show_ip_arp_vrf['interfaces'])
 
-                    with open("FACTS/Show_IP_ARP/%s_show_ip_arp.md" % device.alias, "w") as fh:
-                      fh.write(output_from_parsed_ip_arp_md_template)
+                            with open("Cave_of_Wonders/Show_IP_ARP_VRF/%s_show_ip_arp_vrf_%s.json" % (device.alias,vrf), "w") as fid:
+                              json.dump(self.parsed_show_ip_arp_vrf, fid, indent=4, sort_keys=True)
 
-                    with open("FACTS/Show_IP_ARP/%s_show_ip_arp.html" % device.alias, "w") as fh:
-                      fh.write(output_from_parsed_ip_arp_html_template)
+                            with open("Cave_of_Wonders/Show_IP_ARP_VRF/%s_show_ip_arp_vrf_%s.yaml" % (device.alias,vrf), "w") as yml:
+                              yaml.dump(self.parsed_show_ip_arp_vrf, yml, allow_unicode=True)
 
-                # ---------------------------------------
-                # #chatbots
-                # ---------------------------------------
-                # Working but to be added after file out put complete
+                            with open("Cave_of_Wonders/Show_IP_ARP_VRF/%s_show_ip_arp_vrf_%s.csv" % (device.alias,vrf), "w") as fh:
+                              fh.write(output_from_parsed_ip_arp_vrf_csv_template)
+
+                            with open("Cave_of_Wonders/Show_IP_ARP_VRF/%s_show_ip_arp_vrf_%s.md" % (device.alias,vrf), "w") as fh:
+                              fh.write(output_from_parsed_ip_arp_vrf_md_template)
+
+                            with open("Cave_of_Wonders/Show_IP_ARP_VRF/%s_show_ip_arp_vrf_%s.html" % (device.alias,vrf), "w") as fh:
+                              fh.write(output_from_parsed_ip_arp_vrf_html_template)
 
         # For loop done - We're done here!
-        # Copy all FACTS to runinfo so it is visible in the logviewer
+        # Copy all Wonders to runinfo so it is visible in the logviewer
         # Not working - but should work next week - This would allow to 
-        # see all the FACTS in the brower too!
-        # shutil.copytree('FACTS', os.path.join(self.parameters['runinfo_dir'], 'FACTS'))
+        # see all the Wonders in the brower too!
+        # shutil.copytree('Wonders', os.path.join(self.parameters['runinfo_dir'], 'Wonders'))
 
         # Goodbye Banner
         print(Panel.fit(Text.from_markup("You've made it out of the Code of Wonders on your [bold blue]Magic[/] [bold yellow]Carpet[/]!\nWhat treasures did you get?\n\n[bold yellow]_oOoOoOo_[/]\n([bold yellow]oOoOoOoOo[/])\n)`#####`(\n/         \ \n|  NETWORK  |\n|  D A T A  |\n\           /\n`=========`\n\nWritten by John Capobianco March 2021",justify="center")))
