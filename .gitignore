@@ -1,1 +1,31 @@
+# Python compiled files
+FACTS
+
 *.pyc
+*.pyo
+__pycache__/
+
+# Developer files
+.project
+.pydevproject
+
+# Pycharm files
+.idea
+
+# Rope files
+.ropeproject
+
+# Swap files (VI)
+*.sw*
+
+# backup files
+*.bak
+
+# temp files
+*~
+
+# filesystem stuff on Mac
+.DS_Store
+
+# VSCode
+.vscode
