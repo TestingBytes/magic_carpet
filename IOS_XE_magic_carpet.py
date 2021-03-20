@@ -71,14 +71,21 @@ sh_inventory_9300_html_template = env.get_template('show_inventory_9300_html.j2'
 sh_access_lists_csv_template = env.get_template('show_access_lists_csv.j2')
 sh_access_lists_md_template = env.get_template('show_access_lists_md.j2')
 sh_access_lists_html_template = env.get_template('show_access_lists_html.j2')
+
 # show ntp associations
 sh_ntp_associations_csv_template = env.get_template('show_ntp_associations_csv.j2')
 sh_ntp_associations_md_template = env.get_template('show_ntp_associations_md.j2')
 sh_ntp_associations_html_template = env.get_template('show_ntp_associations_html.j2')
+
 # vrf
 sh_vrf_csv_template = env.get_template('show_vrf_csv.j2')
 sh_vrf_md_template = env.get_template('show_vrf_md.j2')
 sh_vrf_html_template = env.get_template('show_vrf_html.j2')
+
+# IP ARP
+sh_ip_arp_csv_template = env.get_template('show_ip_arp_csv.j2')
+sh_ip_arp_md_template = env.get_template('show_ip_arp_md.j2')
+sh_ip_arp_html_template = env.get_template('show_ip_arp_html.j2')
 
 # ----------------
 # Enable logger
@@ -113,9 +120,10 @@ for device in testbed:
     parsed_show_int_status = device.parse("show interfaces status")
     parsed_show_version = device.parse("show version")
     parsed_show_inventory = device.parse("show inventory")
-    parsed_show_access_lists = device.parse("show access-lists")
     parsed_show_ntp_associations = device.parse("show ntp associations")
+    parsed_show_access_lists = device.parse("show access-lists")
     parsed_show_vrf = device.parse("show vrf")
+    parsed_show_ip_arp = device.parse("show ip arp")
     
     # ---------------------------------------
     # Template Results
@@ -171,6 +179,11 @@ for device in testbed:
     output_from_parsed_vrf_md_template = sh_vrf_md_template.render(to_parse_vrf=parsed_show_vrf['vrf'])
     output_from_parsed_vrf_html_template = sh_vrf_html_template.render(to_parse_vrf=parsed_show_vrf['vrf'])
 
+    # ip arp
+    output_from_parsed_ip_arp_csv_template = sh_ip_arp_csv_template.render(to_parse_ip_arp=parsed_show_ip_arp['interfaces'])
+    output_from_parsed_ip_arp_md_template = sh_ip_arp_md_template.render(to_parse_ip_arp=parsed_show_ip_arp['interfaces'])
+    output_from_parsed_ip_arp_html_template = sh_ip_arp_html_template.render(to_parse_ip_arp=parsed_show_ip_arp['interfaces'])
+    
     # ---------------------------------------
     # Create Files
     # ---------------------------------------
@@ -194,6 +207,7 @@ for device in testbed:
     # Show Interfaces Status
     with open("FACTS/Show_Interfaces_Status/%s_show_int_status.json" % device.alias, "w") as fid:
       json.dump(parsed_show_int_status, fid, indent=4, sort_keys=True)
+
     with open("FACTS/Show_Interfaces_Status/%s_show_int_status.yaml" % device.alias, "w") as yml:
       yaml.dump(parsed_show_int_status, yml, allow_unicode=True) 
 
@@ -309,6 +323,27 @@ for device in testbed:
 
     with open("FACTS/Show_VRF/%s_show_vrf.html" % device.alias, "w") as fh:
       fh.write(output_from_parsed_vrf_html_template)
+
+    # IP ARP
+    with open("FACTS/Show_IP_ARP/%s_show_ip_arp.json" % device.alias, "w") as fid:
+      json.dump(parsed_show_ip_arp, fid, indent=4, sort_keys=True)
+
+    with open("FACTS/Show_IP_ARP/%s_show_ip_arp.yaml" % device.alias, "w") as yml:
+      yaml.dump(parsed_show_ip_arp, yml, allow_unicode=True)
+
+    with open("FACTS/Show_IP_ARP/%s_show_ip_arp.csv" % device.alias, "w") as fh:
+      fh.write(output_from_parsed_ip_arp_csv_template)
+
+    with open("FACTS/Show_IP_ARP/%s_show_ip_arp.md" % device.alias, "w") as fh:
+      fh.write(output_from_parsed_ip_arp_md_template)
+
+    with open("FACTS/Show_IP_ARP/%s_show_ip_arp.html" % device.alias, "w") as fh:
+      fh.write(output_from_parsed_ip_arp_html_template)
+
+    # ---------------------------------------
+    # #chatbots 
+    # ---------------------------------------
+    # Working but to be added after file out put complete
 
 # Goodbye Banner
 log.info(banner("You've made it out of the Code of Wonders on your Magic Carpet!\nWhat treasures did you get?\n\n_oOoOoOo_\n(oOoOoOoOo)\n)`#####`(\n/         \ \n|  NETWORK  |\n|  D A T A  |\n\           /\n`=========`\n\nWritten by John Capobianco March 2021"))  
