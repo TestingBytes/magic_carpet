@@ -9,6 +9,8 @@ John Capobianco
     show etherchannel summary
 
     show interfaces status
+    
+    show interfaces trunk
 
     show inventory
 
