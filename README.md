@@ -80,6 +80,17 @@ Ensure SSH connectivity and run the pyATS job
 ```console
 pyats run job IOS_XE_magic_carpet_job.py --testbed-file testbed/testbed.yaml
 ```
+First - you will get onto the Magic Carpet 
+
+![Step One](/images/Hang_On.png)
+
+Next - Genie Magic 
+
+![Step Two](/images/Heading_In.png)
+
+Finally - We escape the Cave of Wonders with the network data
+
+![Step Three](/images/We_Made_It.png)
 
 To View the log in a Web Browser
 
@@ -87,6 +98,7 @@ To View the log in a Web Browser
 pyats logs view
 ```
 
+![Sample Log](/images/pyATS_Log_Viewer.png)
 
 ### IOS-XE Tests
 Tested on Cisco Catalyst 4500X-16 03.11.03a.E
