@@ -1,0 +1,2 @@
+Interface,Encapsulation,Mode,Native Vlan,Status,Allowed on Trunk,STP Forwarding{% for interface in to_parse_interfaces_trunk %}
+{{ interface }},{{ to_parse_interfaces_trunk[interface].encapsulation }},{{ to_parse_interfaces_trunk[interface].mode }},{{ to_parse_interfaces_trunk[interface].native_vlan }},{{ to_parse_interfaces_trunk[interface].status }},{{ to_parse_interfaces_trunk[interface].vlans_allowed_on_trunk | replace(","," ") }},{{ to_parse_interfaces_trunk[interface].vlans_in_stp_forwarding_not_pruned | replace(","," ") }}{% endfor %}
