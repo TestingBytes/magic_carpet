@@ -24,6 +24,8 @@ Sam Johnson
 
     show ntp associations 
 
+    initial Rich support for ASCII art
+
 Jean-Benoit Aubin
 
     Testscript modification

@@ -14,6 +14,9 @@ import time
 import json
 import shutil
 import logging
+from rich import print
+from rich.panel import Panel
+from rich.text import Text
 from pyats import aetest
 
 # ----------------
@@ -98,7 +101,7 @@ class common_setup(aetest.CommonSetup):
     @aetest.subsection
     def connect_to_devices(self, testbed):
         """Connect to all the devices"""
-        log.info(banner("Hang on tight - we are about to go on a magic carpet ride!\n.-.\n[.-''-.,\n|  //`~\)\n(<|0|>0)\n;\  _/ \\_ _\,\n__\|'._/_  \ '='-,\n/\ \    || )_///_\>>\n(  '._ T |\ | _/),-'\n'.   '._.-' /'/ |\n| '._   _.'`-.._/\n,\ / '-' |/\n[_/\-----j\n_.--.__[_.--'_\__\n/         `--'    '---._\n/ '---.  -'. .'  _.--   '.\n\_      '--.___ _;.-o     /\n'.__ ___/______.__8----'\nc-'----'\n\n\n###___Loading testbed___###"))
+        print(Panel.fit(Text.from_markup("Hang on tight - we are about to go on a [bold blue]Magic[/bold blue] [bold yellow]Carpet[/bold yellow] ride!\n\n[purple].-.\n[.-''-.,\n|  //`~\)\n(<|[/][blue]0[/][purple]|>[/][blue]0[/][purple])\n;\  _/ \\_ _\,\n__\|'._/_  \ '='-,\n/\ \    || )_///_\>>\n(  '._ T |\ | _/),-'\n'.   '._.-' /'/ |\n| '._   _.'`-.._/\n,\ / '-' |/\n[_/\-----j\n_.--.__[_.--'_\__\n/         `--'    '---._\n/ '---.  -'. .'  _.--   '.\n\_      '--.___ _;.-o     /\n'.__ ___/______.__8----'\nc-'----'[/]\n\n",justify="center")))
         testbed.connect()
 
 # Testcase name : tc_one
@@ -115,7 +118,7 @@ class Collect_Information(aetest.Testcase):
             # ---------------------------------------
             # Execute parser to show interface status
             # ---------------------------------------
-            log.info(banner("_.---.__\n.'        `-.\n/      .--.   |\n\/  / /    |_/\n`\/|/    _(_)\n___  /|_.--'    `.   .\n\  `--' .---.     \ /|\n)   `       \     //|\n| __    __   |   '/||\n|/  \  /  \      / ||\n||  |  |   \     \  |\n\|  |  |   /        |\n__\\@/  |@ | ___ \--'\n(     /' `--'  __)|\n__>   (  .  .--' & \n/   `--|_/--'     &  |\n|                 #. |\n|                 q# |\n\              ,ad#'\n`.________.ad####'\n`#####''''''\n`&#\n&# #&\n'#ba'\n'\n\nThe Magic Carpet is heading into the Code of Wonders\nGenie Parsing Has Begun"))
+            print(Panel.fit(Text.from_markup("[blue]_.---.__\n.'        `-.\n/      .--.   |\n\/  / /    |_/\n`\/|/    _(_)\n___  /|_.--'    `.   .\n\  `--' .---.     \ /|\n)   `       \     //|\n| __    __   |   '/||\n|/  \  /  \      / ||\n||  |  |   \     \  |\n\|  |  |   /        |\n__\\@/  |@ | ___ \--'\n(     /' `--'  __)|\n__>   (  .  .--' & \n/   `--|_/--'     &  |\n|                 #. |\n|                 q# |\n\              ,ad#'\n`.________.ad####'\n`#####''''''\n`&#\n&# #&\n'#ba'\n'[/]\n\nThe [bold blue]Magic[/] [bold yellow]Carpet[/] is heading into the Code of Wonders\nGenie Parsing Has Begun",justify="center")))
 
             with steps.start('Parsing show ip interface brief',continue_=True) as step:
                 try:
@@ -431,4 +434,4 @@ class Collect_Information(aetest.Testcase):
         # shutil.copytree('Wonders', os.path.join(self.parameters['runinfo_dir'], 'Wonders'))
 
         # Goodbye Banner
-        log.info(banner("You've made it out of the Code of Wonders on your Magic Carpet!\nWhat treasures did you get?\n\n_oOoOoOo_\n(oOoOoOoOo)\n)`#####`(\n/         \ \n|  NETWORK  |\n|  D A T A  |\n\           /\n`=========`\n\n To see the results of your Magic Carpet ride type\n pyats logs view\n\nWritten by John Capobianco March 2021"))
+        print(Panel.fit(Text.from_markup("You've made it out of the Code of Wonders on your [bold blue]Magic[/] [bold yellow]Carpet[/]!\nWhat treasures did you get?\n\n[bold yellow]_oOoOoOo_[/]\n([bold yellow]oOoOoOoOo[/])\n)`#####`(\n/         \ \n|  NETWORK  |\n|  D A T A  |\n\           /\n`=========`\n\nTo see the results of your Magic Carpet ride type\n pyats logs view\n\nWritten by John Capobianco March 2021",justify="center")))
