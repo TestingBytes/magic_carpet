@@ -105,6 +105,11 @@ sh_etherchannel_summary_html_template = env.get_template('show_etherchannel_summ
 sh_etherchannel_summary_totals_csv_template = env.get_template('show_etherchannel_summary_totals_csv.j2')
 sh_etherchannel_summary_totals_md_template = env.get_template('show_etherchannel_summary_totals_md.j2')
 sh_etherchannel_summary_totals_html_template = env.get_template('show_etherchannel_summary_totals_html.j2')
+
+# Show Interfaces Trunk
+sh_interfaces_trunk_csv_template = env.get_template('show_interfaces_trunk_csv.j2')
+sh_interfaces_trunk_md_template = env.get_template('show_interfaces_trunk_md.j2')
+sh_interfaces_trunk_html_template = env.get_template('show_interfaces_trunk_html.j2')
 class common_setup(aetest.CommonSetup):
     """Common Setup section"""
     @aetest.subsection
@@ -183,6 +188,12 @@ class Collect_Information(aetest.Testcase):
                 except Exception as e:
                     step.failed('Could not parse it correctly\n{e}'.format(e=e))
 
+            with steps.start('Parsing show interfaces trunk',continue_=True) as step:
+                try:
+                    self.parsed_show_interfaces_trunk = device.parse("show interfaces trunk")
+                except Exception as e:
+                    step.failed('Could not parse it correctly\n{e}'.format(e=e))
+
             with steps.start('Store data',continue_=True) as step:
 
                 # Show ip int brief
@@ -256,6 +267,12 @@ class Collect_Information(aetest.Testcase):
                     output_from_parsed_etherchannel_summary_totals_csv_template = sh_etherchannel_summary_totals_csv_template.render(to_parse_etherchannel_summary=self.parsed_show_etherchannel_summary)
                     output_from_parsed_etherchannel_summary_totals_md_template = sh_etherchannel_summary_totals_md_template.render(to_parse_etherchannel_summary=self.parsed_show_etherchannel_summary)
                     output_from_parsed_etherchannel_summary_totals_html_template = sh_etherchannel_summary_totals_html_template.render(to_parse_etherchannel_summary=self.parsed_show_etherchannel_summary)
+
+                # Show interfaces trunk
+                if hasattr(self, 'parsed_show_interfaces_trunk'):
+                    output_from_parsed_interfaces_trunk_csv_template = sh_interfaces_trunk_csv_template.render(to_parse_interfaces_trunk=self.parsed_show_interfaces_trunk['interface'])
+                    output_from_parsed_interfaces_trunk_md_template = sh_interfaces_trunk_md_template.render(to_parse_interfaces_trunk=self.parsed_show_interfaces_trunk['interface'])
+                    output_from_parsed_interfaces_trunk_html_template = sh_interfaces_trunk_html_template.render(to_parse_interfaces_trunk=self.parsed_show_interfaces_trunk['interface'])
 
                 # ---------------------------------------
                 # Create Files
@@ -430,6 +447,23 @@ class Collect_Information(aetest.Testcase):
 
                     with open("Cave_of_Wonders/Show_Etherchannel_Summary/%s_show_etherchannel_summary_totals.html" % device.alias, "w") as fh:
                       fh.write(output_from_parsed_etherchannel_summary_totals_html_template)
+
+                # Show Interfaces Trunk
+                if hasattr(self, 'parsed_show_interfaces_trunk'):
+                    with open("Cave_of_Wonders/Show_Interfaces_Trunk/%s_show_interfaces_trunk.json" % device.alias, "w") as fid:
+                      json.dump(self.parsed_show_interfaces_trunk, fid, indent=4, sort_keys=True)
+
+                    with open("Cave_of_Wonders/Show_Interfaces_Trunk/%s_show_interfaces_trunk.yaml" % device.alias, "w") as yml:
+                      yaml.dump(self.parsed_show_interfaces_trunk, yml, allow_unicode=True)
+
+                    with open("Cave_of_Wonders/Show_Interfaces_Trunk/%s_show_interfaces_trunk.csv" % device.alias, "w") as fh:
+                      fh.write(output_from_parsed_interfaces_trunk_csv_template)
+
+                    with open("Cave_of_Wonders/Show_Interfaces_Trunk/%s_show_interfaces_trunk.md" % device.alias, "w") as fh:
+                      fh.write(output_from_parsed_interfaces_trunk_md_template)
+
+                    with open("Cave_of_Wonders/Show_Interfaces_Trunk/%s_show_interfaces_trunk.html" % device.alias, "w") as fh:
+                      fh.write(output_from_parsed_interfaces_trunk_html_template)
 
                 # Show VRF
                 if hasattr(self, 'parsed_show_vrf'):
