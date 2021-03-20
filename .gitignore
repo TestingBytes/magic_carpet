@@ -1,6 +1,4 @@
 # Python compiled files
-FACTS
-
 *.pyc
 *.pyo
 __pycache__/
