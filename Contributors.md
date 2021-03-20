@@ -10,6 +10,8 @@ John Capobianco
 
     show inventory
 
+    show ip arp
+
     show ip interface brief
 
     show version
