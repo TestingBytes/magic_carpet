@@ -77,6 +77,13 @@ Ensure SSH connectivity and run the pyATS job
 pyats run job IOS_XE_magic_carpet_job.py --testbed-file testbed/testbed.yaml
 ```
 
+To View the log in a Web Browser
+
+```bash
+pyats logs view
+```
+
+
 ### IOS-XE Tests
 Tested on Cisco Catalyst 4500X-16 03.11.03a.E
 
