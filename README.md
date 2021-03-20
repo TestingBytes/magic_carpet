@@ -69,6 +69,10 @@ Install pyATS
 pip install pyats[full]
 ```
 
+```console
+pip install rich
+```
+
 Update the testbed file to reflect your devices.
 
 Ensure SSH connectivity and run the pyATS job
