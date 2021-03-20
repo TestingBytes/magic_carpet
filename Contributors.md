@@ -12,6 +12,8 @@ John Capobianco
 
     show ip arp
 
+    show ip arp vrf {{ vrf }}
+
     show ip interface brief
 
     show version
