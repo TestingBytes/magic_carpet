@@ -12,7 +12,7 @@ And the pyATS framework
 
 Welcome! 
 
-Magic Carpet is a Cisco "show" command transformation tool that uses the Cisco Genie parsers and the Cisco pyATS Python library and automatically generates, at scale, better documentation from the output. 
+Magic Carpet is an infrastructure as code and network automation tool that transforms CLI command and REST API data, using the Cisco Genie parsers, the Cisco pyATS Python library, and Python to automatically generate, at scale, better documentation from the output; send #chatbots; #voicebots; even #phonebots!  
 
 A Nice JSON file (command_output.json)
 
@@ -24,7 +24,13 @@ A Markdown file (command_output.md)
 
 An HTML page (comand_output.html)
 
-In seconds. 
+Instant messages to WebEx, Slack, Discord, and others
+
+Text-to-Speech, in over 200 languages, creating customized MP3 audio files in a human voice
+
+Phone calls to any phone number in the world
+
+Instantly. With the push of a button. 
 
 ## Genie and pyATS
 
