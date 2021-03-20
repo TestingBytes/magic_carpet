@@ -434,4 +434,4 @@ class Collect_Information(aetest.Testcase):
         # shutil.copytree('Wonders', os.path.join(self.parameters['runinfo_dir'], 'Wonders'))
 
         # Goodbye Banner
-        print(Panel.fit(Text.from_markup("You've made it out of the Code of Wonders on your [bold blue]Magic[/] [bold yellow]Carpet[/]!\nWhat treasures did you get?\n\n[bold yellow]_oOoOoOo_[/]\n([bold yellow]oOoOoOoOo[/])\n)`#####`(\n/         \ \n|  NETWORK  |\n|  D A T A  |\n\           /\n`=========`\n\nWritten by John Capobianco March 2021",justify="center")))
+        print(Panel.fit(Text.from_markup("You've made it out of the Code of Wonders on your [bold blue]Magic[/] [bold yellow]Carpet[/]!\nWhat treasures did you get?\n\n[bold yellow]_oOoOoOo_[/]\n([bold yellow]oOoOoOoOo[/])\n)`#####`(\n/         \ \n|  NETWORK  |\n|  D A T A  |\n\           /\n`=========`\n\nTo see the results of your Magic Carpet ride type\n pyats logs view\n\nWritten by John Capobianco March 2021",justify="center")))
