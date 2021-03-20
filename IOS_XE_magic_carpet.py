@@ -96,6 +96,15 @@ sh_ip_arp_vrf_csv_template = env.get_template('show_ip_arp_csv.j2')
 sh_ip_arp_vrf_md_template = env.get_template('show_ip_arp_md.j2')
 sh_ip_arp_vrf_html_template = env.get_template('show_ip_arp_html.j2')
 
+# Show EtherChannel Summary
+sh_etherchannel_summary_csv_template = env.get_template('show_etherchannel_summary_csv.j2')
+sh_etherchannel_summary_md_template = env.get_template('show_etherchannel_summary_md.j2')
+sh_etherchannel_summary_html_template = env.get_template('show_etherchannel_summary_html.j2')
+
+# Show EtherChannel Summary Totals
+sh_etherchannel_summary_totals_csv_template = env.get_template('show_etherchannel_summary_totals_csv.j2')
+sh_etherchannel_summary_totals_md_template = env.get_template('show_etherchannel_summary_totals_md.j2')
+sh_etherchannel_summary_totals_html_template = env.get_template('show_etherchannel_summary_totals_html.j2')
 class common_setup(aetest.CommonSetup):
     """Common Setup section"""
     @aetest.subsection
@@ -162,9 +171,15 @@ class Collect_Information(aetest.Testcase):
                 except Exception as e:
                     step.failed('Could not parse it correctly\n{e}'.format(e=e))
 
-            with steps.start('Parsing ip arp',continue_=True) as step:
+            with steps.start('Parsing show ip arp',continue_=True) as step:
                 try:
                     self.parsed_show_ip_arp = device.parse("show ip arp")
+                except Exception as e:
+                    step.failed('Could not parse it correctly\n{e}'.format(e=e))
+
+            with steps.start('Parsing show etherchannel summary',continue_=True) as step:
+                try:
+                    self.parsed_show_etherchannel_summary = device.parse("show etherchannel summary")
                 except Exception as e:
                     step.failed('Could not parse it correctly\n{e}'.format(e=e))
 
@@ -232,6 +247,15 @@ class Collect_Information(aetest.Testcase):
                     output_from_parsed_ip_arp_csv_template = sh_ip_arp_csv_template.render(to_parse_ip_arp=self.parsed_show_ip_arp['interfaces'])
                     output_from_parsed_ip_arp_md_template = sh_ip_arp_md_template.render(to_parse_ip_arp=self.parsed_show_ip_arp['interfaces'])
                     output_from_parsed_ip_arp_html_template = sh_ip_arp_html_template.render(to_parse_ip_arp=self.parsed_show_ip_arp['interfaces'])
+
+                # Show etherchannel summary
+                if hasattr(self, 'parsed_show_etherchannel_summary'):
+                    output_from_parsed_etherchannel_summary_csv_template = sh_etherchannel_summary_csv_template.render(to_parse_etherchannel_summary=self.parsed_show_etherchannel_summary['interfaces'])
+                    output_from_parsed_etherchannel_summary_md_template = sh_etherchannel_summary_md_template.render(to_parse_etherchannel_summary=self.parsed_show_etherchannel_summary['interfaces'])
+                    output_from_parsed_etherchannel_summary_html_template = sh_etherchannel_summary_html_template.render(to_parse_etherchannel_summary=self.parsed_show_etherchannel_summary['interfaces'])
+                    output_from_parsed_etherchannel_summary_totals_csv_template = sh_etherchannel_summary_totals_csv_template.render(to_parse_etherchannel_summary=self.parsed_show_etherchannel_summary)
+                    output_from_parsed_etherchannel_summary_totals_md_template = sh_etherchannel_summary_totals_md_template.render(to_parse_etherchannel_summary=self.parsed_show_etherchannel_summary)
+                    output_from_parsed_etherchannel_summary_totals_html_template = sh_etherchannel_summary_totals_html_template.render(to_parse_etherchannel_summary=self.parsed_show_etherchannel_summary)
 
                 # ---------------------------------------
                 # Create Files
@@ -379,6 +403,33 @@ class Collect_Information(aetest.Testcase):
 
                     with open("Cave_of_Wonders/Show_IP_ARP/%s_show_ip_arp.html" % device.alias, "w") as fh:
                       fh.write(output_from_parsed_ip_arp_html_template)
+
+                # Show Etherchannel Summary
+                if hasattr(self, 'parsed_show_etherchannel_summary'):
+                    with open("Cave_of_Wonders/Show_Etherchannel_Summary/%s_show_etherchannel_summary.json" % device.alias, "w") as fid:
+                      json.dump(self.parsed_show_etherchannel_summary, fid, indent=4, sort_keys=True)
+
+                    with open("Cave_of_Wonders/Show_Etherchannel_Summary/%s_show_etherchannel_summary.yaml" % device.alias, "w") as yml:
+                      yaml.dump(self.parsed_show_etherchannel_summary, yml, allow_unicode=True)
+
+                    with open("Cave_of_Wonders/Show_Etherchannel_Summary/%s_show_etherchannel_summary.csv" % device.alias, "w") as fh:
+                      fh.write(output_from_parsed_etherchannel_summary_csv_template)
+
+                    with open("Cave_of_Wonders/Show_Etherchannel_Summary/%s_show_etherchannel_summary.md" % device.alias, "w") as fh:
+                      fh.write(output_from_parsed_etherchannel_summary_md_template)
+
+                    with open("Cave_of_Wonders/Show_Etherchannel_Summary/%s_show_etherchannel_summary.html" % device.alias, "w") as fh:
+                      fh.write(output_from_parsed_etherchannel_summary_html_template)
+
+                # Totals
+                    with open("Cave_of_Wonders/Show_Etherchannel_Summary/%s_show_etherchannel_summary_totals.csv" % device.alias, "w") as fh:
+                      fh.write(output_from_parsed_etherchannel_summary_totals_csv_template)
+
+                    with open("Cave_of_Wonders/Show_Etherchannel_Summary/%s_show_etherchannel_summary_totals.md" % device.alias, "w") as fh:
+                      fh.write(output_from_parsed_etherchannel_summary_totals_md_template)
+
+                    with open("Cave_of_Wonders/Show_Etherchannel_Summary/%s_show_etherchannel_summary_totals.html" % device.alias, "w") as fh:
+                      fh.write(output_from_parsed_etherchannel_summary_totals_html_template)
 
                 # Show VRF
                 if hasattr(self, 'parsed_show_vrf'):

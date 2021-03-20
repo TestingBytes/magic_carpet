@@ -1,0 +1,27 @@
+<html><body>
+<h1>Show Etherchannel Summary</h1>
+<table style="width:100%">
+  <tr>
+    <th>Port-Channel</th>
+    <th>Bundle ID</th>
+    <th>Name</th>
+    <th>Status</th>
+    <th>Protocol</th>
+    <th>Flags</th>
+    <th>Member Interface</th>
+    <th>Member Bundled</th>
+    <th>Member Flags</th>
+  </tr>{% for interface in to_parse_etherchannel_summary %}{% for member in to_parse_etherchannel_summary[interface].members %}  
+  <tr>
+    <td>{{ interface }}</td>
+    <td>{{ to_parse_etherchannel_summary[interface].bundle_id }}</td>
+    <td>{{ to_parse_etherchannel_summary[interface].name }}</td>
+    <td>{{ to_parse_etherchannel_summary[interface].oper_status }}</td>
+    <td>{{ to_parse_etherchannel_summary[interface].protocol | default("Mode On") }}</td>
+    <td>{{ to_parse_etherchannel_summary[interface].flags }}</td>
+    <td>{{ to_parse_etherchannel_summary[interface].members[member].interface }}</td>
+    <td>{{ to_parse_etherchannel_summary[interface].members[member].bundled }}</td>
+    <td></td>
+  </tr>{% endfor %}{% endfor %}
+</table>
+</body></html>

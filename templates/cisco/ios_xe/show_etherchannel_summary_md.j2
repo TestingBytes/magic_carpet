@@ -1,0 +1,4 @@
+# Etherchannel Summary
+| Port-Channel | Bundle ID | Name | Status | Protocol | Flags | Member Interface | Memeber Bundled | Member Flags |{% for interface in to_parse_etherchannel_summary %}{% for member in to_parse_etherchannel_summary[interface].members %}
+| ------------ | --------- | ---- | ------ | -------- | ----- | ---------------- | --------------- | ------------ |
+| {{ interface }} | {{ to_parse_etherchannel_summary[interface].bundle_id }} | {{ to_parse_etherchannel_summary[interface].name }} | {{ to_parse_etherchannel_summary[interface].oper_status }} | {{ to_parse_etherchannel_summary[interface].protocol | default("Mode On") }} | {{ to_parse_etherchannel_summary[interface].flags }} | {{ member }} | {{ to_parse_etherchannel_summary[interface].members[member].bundled }} | {{ to_parse_etherchannel_summary[interface].members[member].flags }} |{% endfor %}{% endfor %}

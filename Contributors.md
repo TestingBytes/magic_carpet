@@ -6,6 +6,8 @@ John Capobianco
 
     show access lists
 
+    show etherchannel summary
+
     show interfaces status
 
     show inventory
