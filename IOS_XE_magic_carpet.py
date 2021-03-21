@@ -111,6 +111,11 @@ sh_interfaces_trunk_csv_template = env.get_template('show_interfaces_trunk_csv.j
 sh_interfaces_trunk_md_template = env.get_template('show_interfaces_trunk_md.j2')
 sh_interfaces_trunk_html_template = env.get_template('show_interfaces_trunk_html.j2')
 
+# Show MAC Address-Table
+sh_mac_address_table_csv_template = env.get_template('show_mac_address_table_csv.j2')
+sh_mac_address_table_md_template = env.get_template('show_mac_address_table_md.j2')
+sh_mac_address_table_html_template = env.get_template('show_mac_address_table_html.j2')
+
 # Learn Routing
 lrn_routing_csv_template = env.get_template('learn_routing_csv.j2')
 
@@ -195,6 +200,12 @@ class Collect_Information(aetest.Testcase):
             with steps.start('Parsing show interfaces trunk',continue_=True) as step:
                 try:
                     self.parsed_show_interfaces_trunk = device.parse("show interfaces trunk")
+                except Exception as e:
+                    step.failed('Could not parse it correctly\n{e}'.format(e=e))
+            
+            with steps.start('Parsing show mac address-table',continue_=True) as step:
+                try:
+                    self.parsed_show_mac_address_table = device.parse("show mac address-table")
                 except Exception as e:
                     step.failed('Could not parse it correctly\n{e}'.format(e=e))
 
@@ -284,9 +295,17 @@ class Collect_Information(aetest.Testcase):
                     output_from_parsed_interfaces_trunk_md_template = sh_interfaces_trunk_md_template.render(to_parse_interfaces_trunk=self.parsed_show_interfaces_trunk['interface'])
                     output_from_parsed_interfaces_trunk_html_template = sh_interfaces_trunk_html_template.render(to_parse_interfaces_trunk=self.parsed_show_interfaces_trunk['interface'])
 
+                # Show mac address-table
+                if hasattr(self, 'parsed_show_mac_address_table'):
+                    output_from_parsed_mac_address_table_csv_template = sh_mac_address_table_csv_template.render(to_parse_mac_address_table=self.parsed_show_mac_address_table['mac_table'])
+                    output_from_parsed_mac_address_table_md_template = sh_mac_address_table_md_template.render(to_parse_mac_address_table=self.parsed_show_mac_address_table['mac_table'])
+                    output_from_parsed_mac_address_table_html_template = sh_mac_address_table_html_template.render(to_parse_mac_address_table=self.parsed_show_mac_address_table['mac_table'])
+
+                # Learn Routing
                 if hasattr(self, 'learn_routing'):
                     output_from_learn_routing_csv_template = lrn_routing_csv_template.render(to_parse_learn_routing = self.parsed_learn_routing)
-
+                
+                
                 # ---------------------------------------
                 # Create Files
                 # ---------------------------------------
@@ -451,7 +470,7 @@ class Collect_Information(aetest.Testcase):
                     with open("Cave_of_Wonders/Show_Etherchannel_Summary/%s_show_etherchannel_summary.html" % device.alias, "w") as fh:
                       fh.write(output_from_parsed_etherchannel_summary_html_template)
 
-                # Totals
+                # Etherchannel Totals
                     with open("Cave_of_Wonders/Show_Etherchannel_Summary/%s_show_etherchannel_summary_totals.csv" % device.alias, "w") as fh:
                       fh.write(output_from_parsed_etherchannel_summary_totals_csv_template)
 
@@ -460,6 +479,23 @@ class Collect_Information(aetest.Testcase):
 
                     with open("Cave_of_Wonders/Show_Etherchannel_Summary/%s_show_etherchannel_summary_totals.html" % device.alias, "w") as fh:
                       fh.write(output_from_parsed_etherchannel_summary_totals_html_template)
+
+                # Show MAC Address-Table
+                if hasattr(self, 'parsed_show_mac_address_table'):
+                    with open("Cave_of_Wonders/Show_MAC_Address_Table/%s_show_mac_address_table.json" % device.alias, "w") as fid:
+                      json.dump(self.parsed_show_mac_address_table, fid, indent=4, sort_keys=True)
+
+                    with open("Cave_of_Wonders/Show_MAC_Address_Table/%s_show_mac_address_table.yaml" % device.alias, "w") as yml:
+                      yaml.dump(self.parsed_show_mac_address_table, yml, allow_unicode=True)
+
+                    with open("Cave_of_Wonders/Show_MAC_Address_Table/%s_show_mac_address_table.csv" % device.alias, "w") as fh:
+                      fh.write(output_from_parsed_mac_address_table_csv_template)
+
+                    with open("Cave_of_Wonders/Show_MAC_Address_Table/%s_show_mac_address_table.md" % device.alias, "w") as fh:
+                      fh.write(output_from_parsed_mac_address_table_md_template)
+
+                    with open("Cave_of_Wonders/Show_MAC_Address_Table/%s_show_mac_address_table.html" % device.alias, "w") as fh:
+                      fh.write(output_from_parsed_mac_address_table_html_template)
 
                 # Show Interfaces Trunk
                 if hasattr(self, 'parsed_show_interfaces_trunk'):

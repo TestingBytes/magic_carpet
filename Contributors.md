@@ -20,6 +20,8 @@ John Capobianco
 
     show ip interface brief
 
+    show mac address-table
+
     show version
 
     show vrf
