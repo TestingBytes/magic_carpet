@@ -1,0 +1,17 @@
+<html><body>
+<h1>Show MAC Address Table</h1>
+<table style="width:100%">
+  <tr>
+    <th>VLAN</th>
+    <th>MAC Address</th>
+    <th>Interface</th>
+    <th>Entry Type</th>   
+  </tr>{% for vlan in to_parse_mac_address_table.vlans %}{% for mac in to_parse_mac_address_table.vlans[vlan].mac_addresses %}{% for interface in to_parse_mac_address_table.vlans[vlan].mac_addresses[mac].interfaces %}
+  <tr>
+    <td>{{ vlan }}</td>
+    <td>{{ mac }}</td>
+    <td>{{ interface }}</td>
+    <td>{{ to_parse_mac_address_table.vlans[vlan].mac_addresses[mac].interfaces[interface].entry_type }}</td>
+  </tr>{% endfor %}{% endfor %}{% endfor %}
+</table>
+</body></html>
