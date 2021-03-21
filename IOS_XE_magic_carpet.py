@@ -287,7 +287,7 @@ class Collect_Information(aetest.Testcase):
                     output_from_parsed_interfaces_trunk_html_template = sh_interfaces_trunk_html_template.render(to_parse_interfaces_trunk=self.parsed_show_interfaces_trunk['interface'])
 
                 # Show mac address-table
-                if hasattr(self, 'parsed_show_ip_arp'):
+                if hasattr(self, 'parsed_show_mac_address_table'):
                     output_from_parsed_mac_address_table_csv_template = sh_mac_address_table_csv_template.render(to_parse_mac_address_table=self.parsed_show_mac_address_table['mac_table'])
                     output_from_parsed_mac_address_table_md_template = sh_mac_address_table_md_template.render(to_parse_mac_address_table=self.parsed_show_mac_address_table['mac_table'])
                     output_from_parsed_mac_address_table_html_template = sh_mac_address_table_html_template.render(to_parse_mac_address_table=self.parsed_show_mac_address_table['mac_table'])
