@@ -110,6 +110,10 @@ sh_etherchannel_summary_totals_html_template = env.get_template('show_etherchann
 sh_interfaces_trunk_csv_template = env.get_template('show_interfaces_trunk_csv.j2')
 sh_interfaces_trunk_md_template = env.get_template('show_interfaces_trunk_md.j2')
 sh_interfaces_trunk_html_template = env.get_template('show_interfaces_trunk_html.j2')
+
+# Learn Routing
+lrn_routing_csv_template = env.get_template('learn_routing_csv.j2')
+
 class common_setup(aetest.CommonSetup):
     """Common Setup section"""
     @aetest.subsection
@@ -194,6 +198,12 @@ class Collect_Information(aetest.Testcase):
                 except Exception as e:
                     step.failed('Could not parse it correctly\n{e}'.format(e=e))
 
+            with steps.start('Learning routing',continue_=True) as step:
+                try:
+                    self.parsed_learn_routing = json.dumps(device.learn("routing").info)
+                except Exception as e:
+                    step.failed('Could not learn routing\n{e}'.format(e=e))
+
             with steps.start('Store data',continue_=True) as step:
 
                 # Show ip int brief
@@ -273,6 +283,9 @@ class Collect_Information(aetest.Testcase):
                     output_from_parsed_interfaces_trunk_csv_template = sh_interfaces_trunk_csv_template.render(to_parse_interfaces_trunk=self.parsed_show_interfaces_trunk['interface'])
                     output_from_parsed_interfaces_trunk_md_template = sh_interfaces_trunk_md_template.render(to_parse_interfaces_trunk=self.parsed_show_interfaces_trunk['interface'])
                     output_from_parsed_interfaces_trunk_html_template = sh_interfaces_trunk_html_template.render(to_parse_interfaces_trunk=self.parsed_show_interfaces_trunk['interface'])
+
+                if hasattr(self, 'learn_routing'):
+                    output_from_learn_routing_csv_template = lrn_routing_csv_template.render(to_parse_learn_routing = self.parsed_learn_routing)
 
                 # ---------------------------------------
                 # Create Files
@@ -511,6 +524,11 @@ class Collect_Information(aetest.Testcase):
 
                             with open("Cave_of_Wonders/Show_IP_ARP_VRF/%s_show_ip_arp_vrf_%s.html" % (device.alias,vrf), "w") as fh:
                               fh.write(output_from_parsed_ip_arp_vrf_html_template)
+
+                # Routing
+                if hasattr(self, 'parsed_learn_routing'):
+                  with open("Cave_of_Wonders/Learn_Routing/%s_learn_routing.json" % device.alias, "w") as fid:
+                    json.dump(self.parsed_learn_routing, fid, indent=4, sort_keys=True)
 
         # For loop done - We're done here!
         # Copy all Wonders to runinfo so it is visible in the logviewer
